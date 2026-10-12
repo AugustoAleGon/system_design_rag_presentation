@@ -1,0 +1,74 @@
+[
+  {
+    "id": "returns-v1",
+    "language": "en",
+    "page": 1,
+    "source": "/policies/returns-v1-en.pdf",
+    "checksum": "b8e7acca62e6f836e236924c4c8f61a995508484b5b0e4b7dd03252a211552ca",
+    "text": "LUMA STORE / POLICY LIBRARY\nReturns policy\nreturns-v1 / EN / DEMO\nFICTIONAL STORE - TEACHING EXAMPLE ONLY\nEffective / Vigencia: [2026-01-01, 2026-07-01)\nDate basis / Fecha base: purchase_date\nUploaded / Carga: 2026-01-02  |  Status / Estado: READY\n1. Applicability: This version applies to DEMO-market orders purchased on or after 2026-01-01\nand before 2026-07-01. The purchase date selects the policy; the upload date does not.\n2. Return window: A return can be requested within 30 calendar days after purchase. Eligibility\nalso requires an unused item, original packaging, and proof of purchase. A chatbot may explain\nthe policy but cannot approve a return.\n3. Historical validity: A later policy does not replace these terms for purchases in this interval.\nMissing order dates or conflicting policy records require clarification or support review.\nSystem Design / RAG / Augusto Gonzalez\n1 / 1\n",
+    "passage": "Return window: A return can be requested within 30 calendar days after purchase. Eligibility also requires an unused item, original packaging, and proof of purchase. A chatbot may explain the policy but cannot approve a return."
+  },
+  {
+    "id": "returns-v1",
+    "language": "es",
+    "page": 1,
+    "source": "/policies/returns-v1-es.pdf",
+    "checksum": "0953031e75ce89eb169621bf4849c82b96935f2f92c2a03fd74a055deeeb4257",
+    "text": "LUMA STORE / POLICY LIBRARY\nPolítica de devoluciones\nreturns-v1 / ES / DEMO\nTIENDA FICTICIA - SOLO EJEMPLO EDUCATIVO\nEffective / Vigencia: [2026-01-01, 2026-07-01)\nDate basis / Fecha base: purchase_date\nUploaded / Carga: 2026-01-02  |  Status / Estado: READY\n1. Aplicación: Esta versión aplica a pedidos del mercado DEMO comprados desde 2026-01-01\ny antes de 2026-07-01. La fecha de compra selecciona la política; la fecha de carga no.\n2. Plazo de devolución: Puede solicitarse una devolución dentro de 30 días calendario desde la\ncompra. También se requiere un artículo sin usar, empaque original y comprobante de compra.\nEl chatbot explica la política, pero no aprueba devoluciones.\n3. Validez histórica: Una política posterior no reemplaza estos términos para compras de este\nintervalo. Si faltan fechas o existen registros contradictorios, debe aclararse el caso o escalarlo\na soporte.\nSystem Design / RAG / Augusto Gonzalez\n1 / 1\n",
+    "passage": "Plazo de devolución: Puede solicitarse una devolución dentro de 30 días calendario desde la compra. También se requiere un artículo sin usar, empaque original y comprobante de compra. El chatbot explica la política, pero no aprueba devoluciones."
+  },
+  {
+    "id": "returns-v2",
+    "language": "en",
+    "page": 1,
+    "source": "/policies/returns-v2-en.pdf",
+    "checksum": "b56e44faeb54495278cf4e84ab711f0a6627645eea49b4c38388332dd46308b9",
+    "text": "LUMA STORE / POLICY LIBRARY\nReturns policy\nreturns-v2 / EN / DEMO\nFICTIONAL STORE - TEACHING EXAMPLE ONLY\nEffective / Vigencia: [2026-07-01, open-ended)\nDate basis / Fecha base: purchase_date\nUploaded / Carga: 2026-06-25  |  Status / Estado: READY\n1. Applicability: This version applies to DEMO-market orders purchased on or after 2026-07-01.\nThe purchase date selects the policy, even when the customer asks a question later. This PDF\nwas uploaded before it became effective.\n2. Return window: A return can be requested within 14 calendar days after purchase. Eligibility\nalso requires an unused item, original packaging, and proof of purchase. Requests outside the\nwindow must be reviewed by support; the chatbot cannot promise an exception.\n3. Version boundary: Purchases before 2026-07-01 remain governed by returns v1. Revisions\nare retained as immutable PDFs, and this version must not be substituted for historical\npurchases.\nSystem Design / RAG / Augusto Gonzalez\n1 / 1\n",
+    "passage": "Return window: A return can be requested within 14 calendar days after purchase. Eligibility also requires an unused item, original packaging, and proof of purchase. Requests outside the window must be reviewed by support; the chatbot cannot promise an exception."
+  },
+  {
+    "id": "returns-v2",
+    "language": "es",
+    "page": 1,
+    "source": "/policies/returns-v2-es.pdf",
+    "checksum": "2c59a5751a2933ba6dd145da9854f980fd79fc10d696a59feb8b79e822dcf1a2",
+    "text": "LUMA STORE / POLICY LIBRARY\nPolítica de devoluciones\nreturns-v2 / ES / DEMO\nTIENDA FICTICIA - SOLO EJEMPLO EDUCATIVO\nEffective / Vigencia: [2026-07-01, sin fin definido)\nDate basis / Fecha base: purchase_date\nUploaded / Carga: 2026-06-25  |  Status / Estado: READY\n1. Aplicación: Esta versión aplica a pedidos del mercado DEMO comprados desde 2026-07-01.\nLa fecha de compra selecciona la política, aunque la consulta ocurra después. Este PDF se\ncargó antes de entrar en vigor.\n2. Plazo de devolución: Puede solicitarse una devolución dentro de 14 días calendario desde la\ncompra. También se requiere un artículo sin usar, empaque original y comprobante de compra.\nLas solicitudes fuera del plazo deben revisarse en soporte; el chatbot no promete excepciones.\n3. Límite de versión: Las compras anteriores a 2026-07-01 siguen regidas por returns v1. Las\nrevisiones se conservan como PDFs inmutables y esta versión no sustituye la aplicable a\ncompras históricas.\nSystem Design / RAG / Augusto Gonzalez\n1 / 1\n",
+    "passage": "Plazo de devolución: Puede solicitarse una devolución dentro de 14 días calendario desde la compra. También se requiere un artículo sin usar, empaque original y comprobante de compra. Las solicitudes fuera del plazo deben revisarse en soporte; el chatbot no promete excepciones."
+  },
+  {
+    "id": "refunds-v1",
+    "language": "en",
+    "page": 1,
+    "source": "/policies/refunds-v1-en.pdf",
+    "checksum": "b511704d0807f31d67a621082b2e8a49b4d2bce091bd7b7716b396c93313f463",
+    "text": "LUMA STORE / POLICY LIBRARY\nRefunds policy\nrefunds-v1 / EN / DEMO\nFICTIONAL STORE - TEACHING EXAMPLE ONLY\nEffective / Vigencia: [2026-01-01, open-ended)\nDate basis / Fecha base: approval_date\nUploaded / Carga: 2026-01-02  |  Status / Estado: READY\n1. Applicability: This version applies to DEMO-market refunds approved on or after 2026-01-01.\nThe verified refund approval date selects the policy, not the purchase date or the date of the\nquestion.\n2. Refund timing: After approval, refunds normally appear on the original payment method\nwithin 5 to 7 business days. This is an expected processing window, not confirmation that a\nparticular refund was sent or completed.\n3. Transaction status: Actual approval and payment status must come from an authenticated\norder or payment API. PDF retrieval cannot issue money, confirm a transfer, or bypass account\nverification.\nSystem Design / RAG / Augusto Gonzalez\n1 / 1\n",
+    "passage": "Refund timing: After approval, refunds normally appear on the original payment method within 5 to 7 business days. This is an expected processing window, not confirmation that a particular refund was sent or completed."
+  },
+  {
+    "id": "refunds-v1",
+    "language": "es",
+    "page": 1,
+    "source": "/policies/refunds-v1-es.pdf",
+    "checksum": "bbc1245cd6351fd8e2331ccad4c8191c06708eb31baa81dafff45fb23fc7f630",
+    "text": "LUMA STORE / POLICY LIBRARY\nPolítica de reembolsos\nrefunds-v1 / ES / DEMO\nTIENDA FICTICIA - SOLO EJEMPLO EDUCATIVO\nEffective / Vigencia: [2026-01-01, sin fin definido)\nDate basis / Fecha base: approval_date\nUploaded / Carga: 2026-01-02  |  Status / Estado: READY\n1. Aplicación: Esta versión aplica a reembolsos del mercado DEMO aprobados desde\n2026-01-01. La fecha verificada de aprobación selecciona la política, no la fecha de compra ni\nla de consulta.\n2. Plazo del reembolso: Después de la aprobación, el reembolso normalmente aparece en el\nmedio de pago original dentro de 5 a 7 días hábiles. Es un plazo esperado, no una\nconfirmación de que un reembolso específico fue enviado o completado.\n3. Estado transaccional: La aprobación y el estado del pago deben consultarse en una API\nautenticada de pedidos o pagos. El retrieval del PDF no emite dinero, confirma transferencias\nni omite verificación de la cuenta.\nSystem Design / RAG / Augusto Gonzalez\n1 / 1\n",
+    "passage": "Plazo del reembolso: Después de la aprobación, el reembolso normalmente aparece en el medio de pago original dentro de 5 a 7 días hábiles. Es un plazo esperado, no una confirmación de que un reembolso específico fue enviado o completado."
+  },
+  {
+    "id": "privacy-v1",
+    "language": "en",
+    "page": 1,
+    "source": "/policies/privacy-v1-en.pdf",
+    "checksum": "f9a52793827a0f0c41ecf8dcccdf08199d435006a336b71082b3371415d333e7",
+    "text": "LUMA STORE / POLICY LIBRARY\nPrivacy policy\nprivacy-v1 / EN / DEMO\nFICTIONAL STORE - TEACHING EXAMPLE ONLY\nEffective / Vigencia: [2026-01-01, open-ended)\nDate basis / Fecha base: question_date\nUploaded / Carga: 2026-01-02  |  Status / Estado: READY\n1. Applicability: For questions about current DEMO-market store practices, use the policy\neffective on the question date. Questions about historical practices require the relevant event\ndate and support review when the scope is unclear.\n2. Data handling: The fictional store uses name, email, shipping address, and payment\nreference to fulfill orders and provide support. Its demo policy retains order records for 12\nmonths after purchase and does not store full payment-card numbers.\n3. Customer requests: Account access and deletion requests require identity verification and a\nseparate authorized workflow. The chatbot may explain the policy, but it cannot claim that it\naccessed or deleted personal data.\nSystem Design / RAG / Augusto Gonzalez\n1 / 1\n",
+    "passage": "Data handling: The fictional store uses name, email, shipping address, and payment reference to fulfill orders and provide support. Its demo policy retains order records for 12 months after purchase and does not store full payment-card numbers."
+  },
+  {
+    "id": "privacy-v1",
+    "language": "es",
+    "page": 1,
+    "source": "/policies/privacy-v1-es.pdf",
+    "checksum": "d4d28ee58195162348454b255303ab8bf1ea8c1866b584b79f01a54eb2666b89",
+    "text": "LUMA STORE / POLICY LIBRARY\nPolítica de privacidad\nprivacy-v1 / ES / DEMO\nTIENDA FICTICIA - SOLO EJEMPLO EDUCATIVO\nEffective / Vigencia: [2026-01-01, sin fin definido)\nDate basis / Fecha base: question_date\nUploaded / Carga: 2026-01-02  |  Status / Estado: READY\n1. Aplicación: Para preguntas sobre prácticas actuales de la tienda en el mercado DEMO, se\nusa la política vigente en la fecha de consulta. Las prácticas históricas requieren la fecha del\nevento y revisión de soporte cuando el alcance no esté claro.\n2. Tratamiento de datos: La tienda ficticia usa nombre, correo, dirección de envío y referencia\nde pago para entregar pedidos y brindar soporte. Su política de ejemplo conserva registros de\npedidos por 12 meses desde la compra y no almacena números completos de tarjetas.\n3. Solicitudes del cliente: El acceso a la cuenta y la eliminación de datos requieren verificar\nidentidad y un flujo autorizado separado. El chatbot explica la política, pero no afirma haber\naccedido ni eliminado datos personales.\nSystem Design / RAG / Augusto Gonzalez\n1 / 1\n",
+    "passage": "Tratamiento de datos: La tienda ficticia usa nombre, correo, dirección de envío y referencia de pago para entregar pedidos y brindar soporte. Su política de ejemplo conserva registros de pedidos por 12 meses desde la compra y no almacena números completos de tarjetas."
+  }
+]
