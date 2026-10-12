@@ -1,0 +1,100 @@
+import type { Language } from './deck';
+type Diagram = 'system' | 'ingestion' | 'query';
+
+/** Editable, self-contained SVG diagrams. Coordinates also define the connector routes. */
+export function architecture(kind: Diagram, lang: Language) {
+ const p = (en:string,es:string) => lang === 'en' ? en : es;
+ const prefix = `arch-${kind}-${lang}`;
+ const nodes:string[]=[]; const edges:string[]=[]; const labels:string[]=[];
+ const node=(x:number,y:number,title:string,detail:string,type='service',width=170)=>nodes.push(`<g class="node ${type}"><rect x="${x}" y="${y}" width="${width}" height="66" rx="8"/><text x="${x+width/2}" y="${y+27}" text-anchor="middle">${title}</text><text class="detail" x="${x+width/2}" y="${y+49}" text-anchor="middle">${detail}</text></g>`);
+ const edge=(path:string,type='data',both=false)=>edges.push(`<path class="edge ${type}" d="${path}" marker-end="url(#${prefix}-${type})" ${both?`marker-start="url(#${prefix}-${type})"`:""}/>`);
+ const label=(x:number,y:number,text:string)=>labels.push(`<text class="edge-label" x="${x}" y="${y}" text-anchor="middle">${text}</text>`);
+ const lane=(y:number,text:string)=>labels.push(`<text class="lane" x="20" y="${y}">${text}</text>`);
+ let title='';let description='';
+ if(kind==='system') {
+  title=p('RAG system architecture','Arquitectura del sistema RAG');
+  description=p('Policy PDFs enter the ingestion API, then a durable queue feeds workers and an index writer. The API stores original files in object storage; workers read them. The index writer populates search indexes and publishes validated revisions in the catalog. User requests pass through the chat API, authorization and version resolution, hybrid retrieval, context builder, and LLM. Resolution reads the catalog; retrieval reads the search indexes. The LLM answer returns to the user with citations.','Los PDFs de políticas entran por la ingestion API; una queue durable alimenta workers y un index writer. La API guarda originales en object storage y los workers los leen. El index writer escribe los índices y publica revisiones validadas en el catálogo. Las consultas pasan por chat API, permisos y versión, hybrid retrieval, context builder y LLM. La resolución consulta el catálogo y retrieval consulta los índices. La respuesta vuelve al usuario con citas.');
+  lane(19,'OFFLINE / INGESTION');
+  node(20,40,p('Policy PDFs','PDFs de políticas'),'returns / refunds / privacy','client');
+  node(230,40,'Ingestion API',p('validate + persist','validar + guardar'));
+  node(440,40,'Durable queue',p('jobs + revision ID','jobs + ID de revisión'),'queue');
+  node(650,40,'Workers','parse / chunk / embed');
+  node(860,40,'Index writer',p('validate + publish','validar + publicar'));
+  edge('M190 73 H230');edge('M400 73 H440','async');edge('M610 73 H650','async');edge('M820 73 H860');
+  node(230,173,'Object storage',p('immutable originals','originales inmutables'),'store');
+  node(650,173,'Version catalog','SQL · ACL · READY','store');
+  node(1070,173,'Search indexes','vector + BM25','store');
+  edge('M315 106 V173');label(342,143,p('write','write'));
+  edge('M400 206 H425 V140 H735 V106');label(565,133,p('read source','leer original'));
+  edge('M945 106 V140 H1155 V173');label(1085,133,p('index writes','escritura de índices'));
+  edge('M945 106 V206 H820');label(932,231,p('publish READY','publicar READY'));
+  lane(283,'ONLINE / RETRIEVAL');
+  node(20,308,p('User','Usuario'),p('question + order','consulta + pedido'),'client');
+  node(230,308,'Chat API',p('session + identity','sesión + identidad'));
+  node(440,308,'Resolver',p('eligible policy IDs','IDs de políticas'));
+  node(650,308,'Hybrid retrieval',p('filter + search','filtros + búsqueda'));
+  node(860,308,'Context builder','rerank + citations');
+  node(1070,308,'LLM',p('grounded generation','generación con fuentes'));
+  for(const x of [190,400,610,820,1030])edge(`M${x} 341 H${x+40}`);
+  edge('M735 239 V260 H525 V308');label(555,253,p('version + ACL','versión + ACL'));
+  edge('M1155 239 V283 H735 V308');label(945,276,p('filtered candidates','candidatos filtrados'));
+  edge('M1155 374 V411 H105 V374');label(630,404,p('streamed answer + citations','respuesta en streaming + citas'));
+  label(630,446,p('Independent scaling: API / retrieval / workers · Observability: metrics / traces / redacted logs','Escalado independiente: API / retrieval / workers · Observabilidad: métricas / trazas / logs depurados')); 
+ } else if(kind==='ingestion') {
+  title=p('Ingestion and publication architecture','Arquitectura de ingestion y publicación');
+  description=p('An upload is persisted before its job is queued. Workers fetch the source, parse, chunk and enrich it, then call the embedding service. The index writer writes vector and BM25 indexes into a staging generation. A validator checks both indexes, then the catalog atomically publishes READY. Workers retry transient failures; exhausted jobs go to a dead-letter queue and can be explicitly replayed.','La API guarda el archivo antes de encolar el job. Los workers leen el original, hacen parsing, chunking y enriquecimiento, y llaman al servicio de embeddings. El index writer escribe vector y BM25 en staging. Un validator comprueba ambos índices y el catálogo publica READY de forma atómica. Los workers reintentan fallos transitorios; los jobs agotados van a una dead-letter queue con replay explícito.');
+  lane(19,p('PERSIST → PROCESS → VALIDATE → PUBLISH','GUARDAR → PROCESAR → VALIDAR → PUBLICAR'));
+  node(20,45,'Upload API',p('validate file','validar archivo'));
+  node(275,45,'Object storage',p('source + checksum','original + checksum'),'store');
+  node(530,45,'Durable queue','source URI + revision','queue');
+  node(785,45,'Workers','parse / chunk / enrich');
+  node(1040,45,'Embedding service',p('versioned model','modelo versionado'));
+  for(const x of [190,445,700,955])edge(`M${x} 78 H${x+85}`,x===445||x===700?'async':'data');
+  label(231,66,p('persist','guardar'));label(486,66,'enqueue');label(741,66,'consume');label(996,66,'embed');
+  // Source reads and failed-job routes use separate levels to avoid crossings.
+  edge('M360 111 V146 H870 V111');label(590,139,p('fetch original by URI','leer original por URI'));
+  node(530,197,'Dead-letter queue',p('inspect + replay','revisar + replay'),'queue');
+  edge('M870 111 V230 H700','async');label(794,221,p('retries exhausted','reintentos agotados'));
+  edge('M615 197 V111','async');label(655,177,'replay');
+  node(1040,322,'Index writer',p('idempotent upserts','upserts idempotentes'));
+  node(785,322,'Vector + BM25',p('staging generation','generación en staging'),'store');
+  node(530,322,'Validator',p('counts + visibility','conteos + visibilidad'));
+  node(275,322,'Version catalog',p('atomic pointer switch','cambio atómico'),'store');
+  node(20,322,'READY',p('available to retrieval','disponible para retrieval'),'client');
+  edge('M1125 111 V322');label(1172,222,p('vectors','vectores'));
+  for(const x of [1040,785,530,275])edge(`M${x} 355 H${x-85}`);
+  label(996,311,'write');label(741,311,'read / check');label(486,311,'publish');label(231,311,'serve');
+  label(620,420,p('Only a fully validated generation can become CURRENT. Keep the previous one for rollback.','Solo una generación validada puede ser CURRENT. Conserva la anterior para rollback.'));
+ } else {
+  title=p('Online retrieval architecture','Arquitectura de retrieval online');
+  description=p('A user request enters the Chat API, which verifies ownership and requests dates from the Order API when needed. Public questions can go directly to the resolver. The resolver combines verified identity and order dates with the policy catalog to produce eligible policy IDs. Retrieval replicas send the same filters to vector and BM25 indexes and embed the question using the matching model. Ranked lists merge with RRF, then a reranker and context builder produce evidence for the LLM. The answer streams back to the user through the chat service. Scale chat and retrieval replicas independently.','La consulta pasa por Chat API, que verifica propiedad y consulta fechas en Order API cuando hacen falta. Las preguntas públicas pasan directamente al resolver. El resolver combina identidad y fechas verificadas con el catálogo para producir IDs de políticas autorizados. Las réplicas de retrieval aplican los mismos filtros a vector y BM25 y crean el embedding de la consulta con el modelo correspondiente. RRF combina rankings; un reranker y un context builder preparan evidencia para el LLM. La respuesta vuelve al usuario por el servicio de chat. Chat y retrieval escalan por separado.');
+  lane(19,p('REQUEST PATH / INDEPENDENT REPLICAS','CONSULTAS / RÉPLICAS INDEPENDIENTES'));
+  node(20,45,p('User','Usuario'),p('question + order','consulta + pedido'),'client');
+  node(275,45,'Chat API',p('auth / orchestration','auth / orquestación'));
+  node(530,45,'Order API',p('verified dates','fechas verificadas'));
+  node(785,45,'Resolver',p('topic / date / ACL','tema / fecha / ACL'));
+  node(1040,45,'Version catalog','SQL · READY','store');
+  for(const x of [190,445,700])edge(`M${x} 78 H${x+85}`);
+  edge('M360 111 V145 H760 V78 H785');
+  label(550,137,p('public questions: no order lookup','consultas públicas: sin Order API'));
+  edge('M1040 78 H955','data',true);label(996,65,p('read','leer'));
+  node(785,198,'Retrieval replicas',p('same filters on both','mismos filtros en ambos'));
+  node(1040,165,'Vector index',p('semantic matches','similitud semántica'),'store');
+  node(1040,260,'BM25 index',p('lexical matches','coincidencias léxicas'),'store');
+  node(530,198,'Query embedding',p('same model as docs','mismo modelo que docs'));
+  edge('M870 111 V198');label(944,156,p('eligible policy IDs','IDs autorizados'));
+  edge('M700 231 H785','data',true);label(741,218,'vector');
+  edge('M1040 198 H995 V218 H955','data',true);edge('M1040 293 H995 V247 H955','data',true);
+  label(1150,151,p('filtered search','búsqueda filtrada'));
+  node(785,351,'RRF + reranker',p('merge / rank / select','combinar / ordenar'));
+  node(530,351,'Context builder',p('budget + source IDs','presupuesto + fuentes'));
+  node(275,351,'LLM',p('evidence → answer','evidencia → respuesta'));
+  node(20,351,p('Answer + citations','Respuesta + citas'),p('stream via Chat API','stream vía Chat API'),'client');
+  edge('M870 264 V351');label(925,308,p('candidates','candidatos'));
+  for(const x of [785,530,275])edge(`M${x} 384 H${x-85}`);
+  edge('M105 351 V111');label(149,232,p('response','respuesta'));
+  label(612,442,p('Filter before ranking. Scope caches by tenant, ACL, topic, event date, language, and index generation.','Filtra antes del ranking. Cachés por tenant, ACL, tema, fecha del evento, idioma y generación del índice.'));
+ }
+ const svg=`<svg class="architecture-svg" data-prefix="${prefix}" viewBox="0 0 1260 458" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="${prefix}-title ${prefix}-desc"><title id="${prefix}-title">${title}</title><desc id="${prefix}-desc">${description}</desc><defs><marker id="${prefix}-data" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#64e9f0"/></marker><marker id="${prefix}-async" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#c4adff"/></marker></defs><style>.architecture-svg .node rect{fill:#121e3b;stroke:#527091;stroke-width:1.3}.architecture-svg .node.store rect{fill:#102b3b;stroke:#4dabb8}.architecture-svg .node.queue rect{fill:#251f43;stroke:#a08bce}.architecture-svg .node.client rect{fill:#0a152b;stroke:#627592;stroke-dasharray:4 3}.architecture-svg text{font-family:Inter Variable,Arial,sans-serif;font-size:18px;fill:#eff5ff}.architecture-svg .detail{font-size:13px;fill:#aec1df}.architecture-svg .edge{fill:none;stroke:#64e9f0;stroke-width:1.7;stroke-linejoin:round}.architecture-svg .edge.async{stroke:#c4adff;stroke-dasharray:6 4}.architecture-svg .edge-label{font-size:12px;fill:#acc2df;paint-order:stroke;stroke:#080d24;stroke-width:5px;stroke-linejoin:round}.architecture-svg .lane{font-size:12px;letter-spacing:1.8px;fill:#64e9f0}</style>${edges.join('')}${nodes.join('')}${labels.join('')}</svg>`;
+ return `<figure class="architecture-figure">${svg}<figcaption><span>${p('Teal: services & data · Purple dashed: asynchronous jobs','Cian: servicios y datos · Morado discontinuo: jobs asíncronos')}</span><button class="diagram-expand" data-diagram-open>${p('Expand diagram','Ampliar diagrama')} ↗</button></figcaption></figure>`;
+}

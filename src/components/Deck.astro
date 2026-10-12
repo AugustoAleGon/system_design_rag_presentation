@@ -1,0 +1,74 @@
+---
+import '@fontsource-variable/inter';
+import '@fontsource/jetbrains-mono/400.css';
+import '../styles/deck.css';
+import '../styles/visuals.css';
+import { getI18n } from '../data/i18n';
+import type { Language, Slide } from '../data/deck';
+interface Props { lang: Language }
+const { lang } = Astro.props;
+const i18n = await getI18n(lang);
+const t = (key:string) => i18n.t(`ui.${key}`);
+const slides = i18n.t('slides', { returnObjects:true }) as Slide[];
+const chapters = i18n.t('chapters', { returnObjects:true }) as string[];
+const number = (n:number) => String(n).padStart(2,'0');
+const duration = (seconds:number) => `${Math.floor(seconds/60)}:${String(seconds%60).padStart(2,'0')}`;
+---
+<!doctype html>
+<html lang={lang}>
+<head>
+ <meta charset="UTF-8" />
+ <meta name="viewport" content="width=device-width, initial-scale=1" />
+ <meta name="theme-color" content="#080e29" />
+ <meta name="description" content={t('description')} />
+ <title>System Design — RAG · AI Engineers</title>
+ <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23080e29'/%3E%3Ctext x='9' y='44' font-family='sans-serif' font-weight='bold' font-size='32' fill='%2356e4ee'%3ESD%3C/text%3E%3C/svg%3E" />
+</head>
+<body data-slide-label={t('slide')} data-of-label={t('of')}>
+ <header class="toolbar">
+  <a class="brand" href="#1" aria-label={t('start')}><span class="brand-mark">AI</span><span>ENGINEERS<span class="brand-country">COLOMBIA</span></span></a>
+  <div class="toolbar-center"><span class="live-dot"></span> SYSTEM DESIGN <span class="toolbar-separator">/</span> RAG</div>
+  <nav class="tools" aria-label={t('help')}>
+   <div class="language-switch" aria-label="Language / Idioma"><a href="/en/" data-language="en" lang="en" aria-current={lang==='en'?'true':undefined}>EN</a><span>/</span><a href="/es/" data-language="es" lang="es" aria-current={lang==='es'?'true':undefined}>ES</a></div>
+   <button id="overview-button" class="icon-button" title={`${t('overview')} (O)`} aria-label={t('overview')}><span aria-hidden="true">▦</span></button>
+   <button id="notes-button" class="icon-button" title={`${t('notes')} (N)`} aria-label={t('notes')} aria-expanded="false"><span aria-hidden="true">☷</span></button>
+   <button id="fullscreen-button" class="icon-button" title={`${t('fullscreen')} (F)`} aria-label={t('fullscreen')}><span aria-hidden="true">⛶</span></button>
+  </nav>
+ </header>
+ <main id="presentation" aria-label="System Design">
+ {slides.map((slide,index)=>(
+  <section class:list={['slide',slide.kind, {'active':index===0}]} id={`slide-${index+1}`} data-index={index} data-chapter={slide.chapter} aria-labelledby={`title-${index}`} aria-hidden={index!==0} inert={index!==0}>
+   <div class="slide-content">
+    <div class="eyebrow slide-eyebrow"><span class="eyebrow-line"></span>{index===0?t('coverLabel'):`${number(slide.chapter)} / ${chapters[slide.chapter]}`}</div>
+    {slide.kind==='cover' ? (
+     <div class="cover-layout"><div class="cover-copy"><h1 id={`title-${index}`}>System<br/><em>Design</em><span class="title-dot">.</span></h1><p class="cover-topic">{t('coverTopic')}</p><p class="subtitle">{slide.subtitle}</p><div set:html={slide.body}/></div>
+      <figure class="speaker-portrait">
+       <img src="/images/augusto-gonzalez.png" alt="Augusto Gonzalez" width="1254" height="1254" fetchpriority="high" />
+      </figure>
+     </div>
+    ) : <><h2 id={`title-${index}`}>{slide.title}</h2><p class="subtitle">{slide.subtitle}</p><div class="slide-body" set:html={slide.body}/></>}
+   </div>
+   <span class="slide-watermark" aria-hidden="true">{number(index+1)}</span>
+  </section>
+ ))}
+ </main>
+ <aside id="notes-panel" hidden aria-label={t('notes')}>
+  <div class="panel-heading"><h2>{t('notes')}</h2><button id="close-notes" class="icon-button" aria-label={t('close')}>×</button></div>
+  <p class="notes-warning">{t('noteHint')}</p>
+  {slides.map((s,i)=><article class="note" data-note={i} hidden={i!==0}><div class="eyebrow">{number(i+1)} · {t('planned')} {duration(s.seconds)}</div><h3>{s.title}</h3><p>{s.notes}</p></article>)}
+ </aside>
+ <footer class="bottom-bar">
+  <div class="chapter-navigation">{chapters.slice(1).map((ch,i)=><button class="chapter-button" data-chapter-target={i+1} title={ch}><span>{number(i+1)}</span><span class="chapter-name">{ch}</span></button>)}</div>
+  <div class="slide-navigation"><button id="previous" class="icon-button" aria-label={t('previous')} disabled>←</button><span id="slide-counter">01 <span>/ {number(slides.length)}</span></span><button id="next" class="icon-button" aria-label={t('next')}>→</button></div>
+  <div class="progress-track" role="progressbar" aria-label={t('progress')} aria-valuemin="1" aria-valuemax={slides.length} aria-valuenow="1"><div id="progress-fill"></div></div>
+ </footer>
+ <div class="session-footer"><span>{t('duration')} <span class="footer-dot">·</span> 12.10.2026</span><button id="help-button">{t('keyboard')} <kbd>←</kbd><kbd>→</kbd><span class="help-mark">?</span></button></div>
+ <dialog id="overview-dialog"><div class="panel-heading"><div><span class="eyebrow">SYSTEM DESIGN / RAG</span><h2>{t('overview')}</h2></div><button class="icon-button" data-close-dialog aria-label={t('close')}>×</button></div><div class="overview-grid">{slides.map((s,i)=><button class="overview-item" data-go={i}><span class="overview-number">{number(i+1)}</span><span class="overview-chapter">{chapters[s.chapter]}</span><strong>{s.title}</strong><small>{duration(s.seconds)}</small></button>)}</div></dialog>
+ <dialog id="help-dialog"><div class="panel-heading"><h2>{t('shortcuts')}</h2><button class="icon-button" data-close-dialog aria-label={t('close')}>×</button></div><p>{t('shortcutHelp')}</p><a class="reference-link" href="/reference/event-poster.png" target="_blank" rel="noreferrer">{t('reference')} ↗</a></dialog>
+ <dialog id="diagram-dialog" aria-labelledby="diagram-title"><div class="panel-heading"><h2 id="diagram-title"></h2><button class="icon-button" data-close-dialog aria-label={t('close')}>×</button></div><div id="diagram-canvas"></div></dialog>
+ <div id="announcement" class="sr-only" aria-live="polite"></div>
+ <script src="../scripts/deck.ts"></script>
+ <script src="../scripts/store-demo.ts"></script>
+ <script src="../scripts/visuals.ts"></script>
+</body>
+</html>
