@@ -1,0 +1,27 @@
+{
+  "name": "system-design-rag",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev --host 0.0.0.0",
+    "build": "astro check && astro build",
+    "preview": "astro preview --host 0.0.0.0",
+    "test": "npm run build && playwright test"
+  },
+  "dependencies": {
+    "@fontsource-variable/inter": "^5.2.0",
+    "@fontsource/jetbrains-mono": "^5.2.0",
+    "astro": "^7.3.8",
+    "i18next": "^26.4.4"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.0",
+    "@playwright/test": "^1.56.0",
+    "@types/node": "^22.20.5",
+    "typescript": "^5.9.0"
+  },
+  "engines": {
+    "node": ">=22.19.0"
+  }
+}
